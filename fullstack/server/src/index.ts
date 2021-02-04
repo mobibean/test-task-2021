@@ -6,7 +6,7 @@ import SocketEvents from './constants'
 
 const app = express();
 const port = 8888;
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+const server = app.listen(port, () => console.log(`Local: http://localhost:${port}`));
 
 // Initialize socket server
 const io = new Server(server, {
@@ -24,7 +24,8 @@ io.on(SocketEvents.CONNECTION, (socket) => {
     socket
       .on(SocketEvents.CLOSE, () => {
         socket.emit(SocketEvents.DATA, '\r\n\r\n*** CONNECTION CLOSED ***\r\n');
-      }).on(SocketEvents.DISCONNECT, () => {
+      })
+      .on(SocketEvents.DISCONNECT, () => {
         console.log('Client disconnected', socket.id);
       });
   } catch (err) {
