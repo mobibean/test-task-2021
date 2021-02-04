@@ -45,7 +45,7 @@ function App() {
     return () => {
       socket.disconnect();
     };
-  }, [handleChangeTerminalInput, handleConnectionError]);
+  }, [handleConnectionError]);
 
   return (
     <div className="app">
