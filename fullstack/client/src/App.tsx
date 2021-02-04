@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { XTerm } from 'xterm-for-react';
 import { FitAddon } from 'xterm-addon-fit';
@@ -16,23 +16,26 @@ function App() {
     xtermRef.current.terminal.write(data);
   };
 
-  const handleConnectionError = () => {
+  const handleConnectionError = useCallback(() => {
     setConnectionError(true);
     socket.disconnect();
     updateTerminalData(
       '\r\n*** Socket connection problem, press r to restart connection ***\r\n'
     );
-  };
+  }, []);
 
-  const handleChangeTerminalInput = (e: string) => {
-    if (connectionError && e === 'r') {
-      // reconnect socket server
-      setConnectionError(false);
-      socket.connect();
-      return;
-    }
-    socket.emit('command', e);
-  };
+  const handleChangeTerminalInput = useCallback(
+    (e: string) => {
+      if (connectionError && e === 'r') {
+        // reconnect socket server
+        setConnectionError(false);
+        socket.connect();
+        return;
+      }
+      socket.emit('command', e);
+    },
+    [connectionError]
+  );
 
   useEffect(() => {
     fitAddon.fit(); // terminal fullscreen mode
@@ -42,7 +45,7 @@ function App() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [handleChangeTerminalInput, handleConnectionError]);
 
   return (
     <div className="app">
