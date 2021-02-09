@@ -1,5 +1,15 @@
 # Test Full-Stack assignment 2021
 
+## Quick start a project
+
+```sh
+cd client && yarn
+cd ../server && yarn
+yarn start
+```
+
+---
+
 Create a web application (React + Node.js) that implements web Linux Terminal connected to a locally running Docker container with Ubuntu.
 
 ![UI](UI.png)
