@@ -8,7 +8,7 @@ export interface IFileControllerController {
   storageRef: firebase.storage.Reference;
 
   getFilesMeta: (path: string) => FilesMeta;
-  uploadFile: (file: File) => void;
-  getDownloadURL: (fileName: string) => Promise<string>;
-  removeFile: (fileName: string) => void;
+  uploadFile: (file: File, path: string) => void;
+  getDownloadURL: (fileName: string, path: string) => Promise<string>;
+  removeFile: (fileName: string, path: string) => void;
 }

@@ -25,20 +25,20 @@ class FileController implements IFileControllerController {
     return items;
   }
 
-  async uploadFile(file: File) {
-    const fileRef = this.storageRef.child(file.name);
+  async uploadFile(file: File, path: string) {
+    const fileRef = this.storageRef.child(path + file.name);
 
     await fileRef.put(file);
   }
 
-  async removeFile(fileName: string) {
-    const fileRef = this.storageRef.child(fileName);
+  async removeFile(fileName: string, path: string) {
+    const fileRef = this.storageRef.child(path + fileName);
 
     await fileRef.delete();
   }
 
-  async getDownloadURL(fileName: string) {
-    const downloadURL = await this.storageRef.child(fileName).getDownloadURL();
+  async getDownloadURL(fileName: string, path: string) {
+    const downloadURL = await this.storageRef.child(path + fileName).getDownloadURL();
 
     return downloadURL;
   }

@@ -24,11 +24,13 @@ const FileItem: React.FunctionComponent<FileItemProps> = ({
   extension,
   size
 }) => {
-  const { removeFile } = useContext(AppContext);
+  const { removeFile, currUser } = useContext(AppContext);
 
   const onRemoveFile = async (name: string) => {
     try {
-      await firebaseFileController.removeFile(name);
+      if (!currUser) return;
+
+      await firebaseFileController.removeFile(name, `/users/${currUser.uid}/`);
 
       removeFile(name);
     } catch {
@@ -38,7 +40,9 @@ const FileItem: React.FunctionComponent<FileItemProps> = ({
 
   const onDownloadFile = async (name: string) => {
     try {
-      const url = await firebaseFileController.getDownloadURL(name);
+      if (!currUser) return;
+
+      const url = await firebaseFileController.getDownloadURL(name, `/users/${currUser.uid}/`);
       const xhr = new XMLHttpRequest();
 
       xhr.responseType = 'blob';

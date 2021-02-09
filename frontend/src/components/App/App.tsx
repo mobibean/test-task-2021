@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import firebase from 'firebase';
 
-import { fileController as firebaseFileController } from 'api';
+import {
+  fileController as firebaseFileController
+} from 'api';
 import { AppContext } from './AppContext';
 import FileUploader from 'components/FileUploader';
 import FileList from 'components/FileList';
@@ -21,10 +24,13 @@ export interface File {
 
 function App() {
   const [files, setFiles] = useState<Array<File>>([]);
+  const [currUser, setCurrUser] = useState<firebase.User | null>(null);
 
   useEffect(() => {
     (async () => {
-      const filesMeta = await firebaseFileController.getFilesMeta('/');
+      if (!currUser) return;
+
+      const filesMeta = await firebaseFileController.getFilesMeta(`/users/${currUser.uid}`);
       const files: Array<File> = [];
 
       for (let item of filesMeta) {
@@ -36,8 +42,8 @@ function App() {
       }
 
       setFiles(files);
-    })()
-  }, []);
+    })();
+  }, [currUser]);
 
   const addFile = (file: File) => {
     setFiles(files => [
@@ -59,12 +65,19 @@ function App() {
     });
   };
 
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      setCurrUser(user);
+    }
+  })
+
   return (
     <Wrapper>
       <Content>
         <AppContext.Provider
           value={{
             files,
+            currUser,
             removeFile,
             addFile
           }}

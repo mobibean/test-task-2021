@@ -20,11 +20,13 @@ import { getFileData } from 'helpers';
 interface FileUploaderProps { }
 
 const FileUploader: React.FunctionComponent<FileUploaderProps> = () => {
-  const { addFile } = useContext(AppContext);
+  const { addFile, currUser } = useContext(AppContext);
 
   const uploadFile = async (file: File) => {
     try {
-      await firebaseFileController.uploadFile(file);
+      if (!currUser) return;
+
+      await firebaseFileController.uploadFile(file, `/users/${currUser.uid}/`);
 
       addFile(
         getFileData(file.size, file.name)
