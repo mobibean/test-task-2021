@@ -24,9 +24,7 @@ const FileUploader: React.FunctionComponent<FileUploaderProps> = () => {
 
   const uploadFile = async (file: File) => {
     try {
-      if (!currUser) return;
-
-      await firebaseFileController.uploadFile(file, `/users/${currUser.uid}/`);
+      await firebaseFileController.uploadFile(file, `/users/${currUser?.uid}/`);
 
       addFile(
         getFileData(file.size, file.name)
